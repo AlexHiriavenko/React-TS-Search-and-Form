@@ -1,10 +1,32 @@
 # React-TS-Search-and-Form
 
-React App. Class and Func components (see according branch). Search. Forms. TypeScript. ESLint and Prettier. Tests.
-
 ## Deploy:
 
     in progress
+
+### Technologies
+
+    - TypeScript
+    - react class components
+    - react functional-components
+    - formik
+    - router-dom
+    - context-api
+    - redux-toolkit
+    - react testing library
+
+### Tools
+
+    - vite
+    - eslint
+    - prettier
+    - husky
+
+### Functionality
+
+    - routing
+    - forms
+    - search
 
 ## Tasks:
 
