@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, Component } from 'react';
+import { ChangeEvent, FormEvent, Component } from 'react';
 
 interface SearchState {
   searchTerm: string;
@@ -17,7 +17,7 @@ class Search extends Component<{}, SearchState> {
   };
 
   handleSearch = (event: FormEvent) => {
-    event.preventDefault(); // Предотвращаем стандартное поведение отправки формы (перезагрузку страницы)
+    event.preventDefault();
     const { searchTerm } = this.state;
     // Логика для отправки поискового запроса на API
     console.log('Поисковый запрос:', searchTerm);
