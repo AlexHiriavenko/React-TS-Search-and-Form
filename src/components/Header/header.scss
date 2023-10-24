@@ -1,0 +1,11 @@
+@import '../Search/search';
+
+.header-main {
+  width: 100%;
+  padding-block: 12px;
+  background-color: black;
+  color: white;
+  min-height: 64px;
+  @include flex-center;
+  overflow-x: hidden;
+}
