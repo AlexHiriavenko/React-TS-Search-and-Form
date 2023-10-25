@@ -1,11 +1,24 @@
 import { Component } from 'react';
+import { Character } from '../../actions/getCharacters';
+import Card from '../../components/Card/Card';
 
-class Home extends Component {
+interface HomeProps {
+  cards: Character[];
+}
+
+class Home extends Component<HomeProps> {
+  constructor(props: HomeProps) {
+    super(props);
+  }
+
   render() {
+    const { cards } = this.props;
     return (
-      <>
-        <p>asdasd</p>
-      </>
+      <section className="cards">
+        {cards.map((card: Character) => (
+          <Card key={card.url} card={card} />
+        ))}
+      </section>
     );
   }
 }

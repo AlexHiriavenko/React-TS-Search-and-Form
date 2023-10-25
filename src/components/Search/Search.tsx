@@ -32,7 +32,7 @@ class Search extends Component<{}, SearchState> {
           type="text"
           value={searchTerm}
           onChange={this.handleInputChange}
-          placeholder="Введите поисковый запрос"
+          placeholder="Введите имя персонажа"
         />
         <button className="search-btn" type="submit">
           Search
