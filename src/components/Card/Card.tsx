@@ -14,6 +14,8 @@ interface CardState {
 }
 
 class Card extends Component<CardProps, CardState> {
+  private abortController = new AbortController();
+
   constructor(props: CardProps) {
     super(props);
     this.state = {
@@ -37,25 +39,40 @@ class Card extends Component<CardProps, CardState> {
     this.setPlanetInfo(this.props.card.homeworld);
   }
 
+  componentWillUnmount() {
+    // При размонтировании компонента отменить все активные запросы
+    this.abortController.abort();
+  }
+
   render() {
     const { card: hero } = this.props;
     const planet = this.state.planet;
-    const characterID = hero.url.replace("https://swapi.dev/api/people/", "").slice(0, -1);
-    const characterPhoto = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${characterID}.jpg`
-    
+    const characterID = hero.url
+      .replace('https://swapi.dev/api/people/', '')
+      .slice(0, -1);
+    const characterPhoto = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${characterID}.jpg`;
+
     return (
       <div className="card">
-        <h3 className='card__title'>Hero Name: {hero.name}</h3>
-        <img src={characterPhoto} alt="character photo" width={180}/>
-        <ul className='card__list'>
-          <li className='card__item'>gender : {hero.gender}</li>
-          <li className='card__item'>birth year : {hero.birth_year}</li>
-          <li className='card__item'>eye color : {hero.eye_color}</li>
-          <li className='card__item'>hair color : {hero.hair_color}</li>
-          <li className='card__item'>height : {hero.height}; weight : {hero.mass}</li>
-          <li className='card__item'>
+        <h3 className="card__title">Hero Name: {hero.name}</h3>
+        <img src={characterPhoto} alt="character photo" width={180} />
+        <ul className="card__list">
+          <li className="card__item">gender : {hero.gender}</li>
+          <li className="card__item">birth year : {hero.birth_year}</li>
+          <li className="card__item">eye color : {hero.eye_color}</li>
+          <li className="card__item">hair color : {hero.hair_color}</li>
+          <li className="card__item">
+            height : {hero.height}; weight : {hero.mass}
+          </li>
+          <li className="card__item">
             home world :{' '}
-            {this.state.loading ? 'Loading...' : this.state.error ? "error, try reload page" : <PlanetList planet={planet} />}
+            {this.state.loading ? (
+              'Loading...'
+            ) : this.state.error ? (
+              'error, try reload page'
+            ) : (
+              <PlanetList planet={planet} />
+            )}
           </li>
         </ul>
       </div>

@@ -40,20 +40,30 @@ class App extends Component<{}, AppState> {
     }
   };
 
+  updateCards = (newCards: Character[]) => this.setState({ cards: newCards });
+
+  setLoading = (bool: boolean) => this.setState({ loading: bool });
+
+  setError = (bool: boolean) => this.setState({ error: bool });
+
   render() {
     const { loading, error, cards } = this.state;
 
     if (loading) {
-      return <p className='app-loading'>Loading...</p>;
+      return <p className="app-loading">Loading...</p>;
     }
     if (error) {
-      return <p>Ошибка при получении данных, попробуйте позже и перезагрузите страницу</p>;
+      return <p className="app-loading">Нет подходящих результатов поиска</p>;
     }
 
     return (
       <>
-        <Header />
-        <Home cards={cards} />
+        <Header
+          updateCards={this.updateCards}
+          setLoading={this.setLoading}
+          setError={this.setError}
+        />
+        <Home cards={cards} error={error} />
       </>
     );
   }

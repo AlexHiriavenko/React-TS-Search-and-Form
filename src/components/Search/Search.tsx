@@ -1,11 +1,21 @@
 import { ChangeEvent, FormEvent, Component } from 'react';
+import getCharacters, {
+  ApiResponse,
+  Character,
+} from '../../actions/getCharacters';
 
 interface SearchState {
   searchTerm: string;
 }
 
-class Search extends Component<{}, SearchState> {
-  constructor(props: {}) {
+interface SearchProps {
+  updateCards: (newCards: Character[]) => void;
+  setLoading: (bool: boolean) => void;
+  setError: (bool: boolean) => void;
+}
+
+class Search extends Component<SearchProps, SearchState> {
+  constructor(props: SearchProps) {
     super(props);
     this.state = {
       searchTerm: '',
@@ -13,14 +23,27 @@ class Search extends Component<{}, SearchState> {
   }
 
   handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: event.target.value });
+    this.setState({ searchTerm: event.target.value.trim() });
   };
 
-  handleSearch = (event: FormEvent) => {
+  handleSearch = async (event: FormEvent) => {
+    const { updateCards, setLoading, setError } = this.props;
     event.preventDefault();
     const { searchTerm } = this.state;
-    // Логика для отправки поискового запроса на API
-    console.log('Поисковый запрос:', searchTerm);
+    setLoading(true);
+    if (searchTerm) {
+      console.log('Поисковый запрос:', searchTerm);
+      try {
+        const endPoint = `?search=${searchTerm}`;
+        const { results }: ApiResponse = await getCharacters(endPoint);
+        updateCards(results);
+        setLoading(false);
+      } catch (error) {
+        console.error('Ошибка при получении данных:', error);
+        setLoading(false);
+        setError(true);
+      }
+    }
   };
 
   render() {
@@ -28,7 +51,7 @@ class Search extends Component<{}, SearchState> {
     return (
       <form className="search-form" onSubmit={this.handleSearch}>
         <input
-          id='search'
+          id="search"
           className="search-input"
           type="text"
           value={searchTerm}

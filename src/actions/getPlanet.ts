@@ -13,6 +13,7 @@ async function getPlanet(url: string): Promise<Planet> {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      Connection: 'keep-alive',
     },
   });
   const data: Planet = await response.json();

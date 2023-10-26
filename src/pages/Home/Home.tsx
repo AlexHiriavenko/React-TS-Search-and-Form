@@ -4,6 +4,7 @@ import Card from '../../components/Card/Card';
 
 interface HomeProps {
   cards: Character[];
+  error: boolean;
 }
 
 class Home extends Component<HomeProps> {
@@ -12,15 +13,24 @@ class Home extends Component<HomeProps> {
   }
 
   render() {
-    const { cards } = this.props;
+    const { cards, error } = this.props;
+    if (error) {
+      return (
+        <p className="app-loading" style={{ color: 'orange' }}>
+          Ошибка получения данных, попробуйте перезагрузить страницу
+        </p>
+      );
+    }
     return (
       <>
-      <section className="cards">
-        {cards.map((card: Character) => (
-          <Card key={card.url} card={card} />
-        ))}
+        <section className="cards">
+          {cards?.length ? (
+            cards.map((card: Character) => <Card key={card.url} card={card} />)
+          ) : (
+            <p className="app-loading">Нет подходящих результатов поиска</p>
+          )}
         </section>
-        </>
+      </>
     );
   }
 }
