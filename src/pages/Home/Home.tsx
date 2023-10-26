@@ -14,11 +14,13 @@ class Home extends Component<HomeProps> {
   render() {
     const { cards } = this.props;
     return (
+      <>
       <section className="cards">
         {cards.map((card: Character) => (
           <Card key={card.url} card={card} />
         ))}
-      </section>
+        </section>
+        </>
     );
   }
 }

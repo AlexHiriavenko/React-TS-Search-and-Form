@@ -8,4 +8,26 @@
   min-height: 64px;
   @include flex-center;
   overflow-x: hidden;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.app-title {
+  padding: 0;
+  margin: 0;
+  font-family: 'Rubik Mono One', sans-serif;
+  font-size: 42px;
+  font-weight: 400;
+  color: white;
+  text-align: center;
+  background-size: 200%;
+  text-shadow: 10px 10px 30px #f00, -10px -10px 30px rgb(139, 61, 255);
+  -webkit-text-stroke: 2px rgb(152, 97, 97);
+  -webkit-text-fill-color: transparent;
+
+  @media (max-width: 480px) {
+    font-size: 36px;
+  }
+
 }

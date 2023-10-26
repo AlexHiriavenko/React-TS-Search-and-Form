@@ -1,0 +1,12 @@
+@import "../../components/Card/card";
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}

@@ -13,6 +13,12 @@ body {
   background-color: lightgray;
 }
 
+ul {
+  list-style-type: none;
+  margin-block: 0;
+  padding-block: 0;
+}
+
 button {
   cursor: pointer;
 }

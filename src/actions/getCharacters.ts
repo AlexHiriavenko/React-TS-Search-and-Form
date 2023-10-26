@@ -17,14 +17,31 @@ interface ApiResponse {
   previous: string | null;
   results: Character[];
 }
+
 export type { ApiResponse, Character };
 
 const basicURL = 'https://swapi.dev/api/people/';
 
 async function getCharacters(options?: string): Promise<ApiResponse> {
-  const response = await fetch(options ? basicURL + options : basicURL);
-  const data: ApiResponse = await response.json();
-  return data;
+  try {
+    const response = await fetch(options ? basicURL + options : basicURL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Connection: 'keep-alive',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data: ApiResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Ошибка при получении данных:', error);
+    throw error;
+  }
 }
 
 export default getCharacters;

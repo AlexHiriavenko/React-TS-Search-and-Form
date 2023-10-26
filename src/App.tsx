@@ -44,10 +44,10 @@ class App extends Component<{}, AppState> {
     const { loading, error, cards } = this.state;
 
     if (loading) {
-      return <p>Loading...</p>;
+      return <p className='app-loading'>Loading...</p>;
     }
     if (error) {
-      return <p>Ошибка при получении данных попробуйте позже</p>;
+      return <p>Ошибка при получении данных, попробуйте позже и перезагрузите страницу</p>;
     }
 
     return (

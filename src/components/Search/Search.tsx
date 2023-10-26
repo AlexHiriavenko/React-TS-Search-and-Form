@@ -28,6 +28,7 @@ class Search extends Component<{}, SearchState> {
     return (
       <form className="search-form" onSubmit={this.handleSearch}>
         <input
+          id='search'
           className="search-input"
           type="text"
           value={searchTerm}

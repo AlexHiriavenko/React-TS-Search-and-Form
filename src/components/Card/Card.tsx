@@ -40,19 +40,22 @@ class Card extends Component<CardProps, CardState> {
   render() {
     const { card: hero } = this.props;
     const planet = this.state.planet;
+    const characterID = hero.url.replace("https://swapi.dev/api/people/", "").slice(0, -1);
+    const characterPhoto = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${characterID}.jpg`
+    
     return (
       <div className="card">
-        <h3>Hero Name: {hero.name}</h3>
-        <ul>
-          <li>gender : {hero.gender}</li>
-          <li>birth year : {hero.birth_year}</li>
-          <li>eye color : {hero.eye_color}</li>
-          <li>hair color : {hero.hair_color}</li>
-          <li>height : {hero.height}</li>
-          <li>weight : {hero.mass}</li>
-          <li>
+        <h3 className='card__title'>Hero Name: {hero.name}</h3>
+        <img src={characterPhoto} alt="character photo" width={180}/>
+        <ul className='card__list'>
+          <li className='card__item'>gender : {hero.gender}</li>
+          <li className='card__item'>birth year : {hero.birth_year}</li>
+          <li className='card__item'>eye color : {hero.eye_color}</li>
+          <li className='card__item'>hair color : {hero.hair_color}</li>
+          <li className='card__item'>height : {hero.height}; weight : {hero.mass}</li>
+          <li className='card__item'>
             home world :{' '}
-            {this.state.loading ? 'Loading...' : <PlanetList planet={planet} />}
+            {this.state.loading ? 'Loading...' : this.state.error ? "error, try reload page" : <PlanetList planet={planet} />}
           </li>
         </ul>
       </div>
