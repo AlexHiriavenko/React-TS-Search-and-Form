@@ -18,7 +18,7 @@ class Search extends Component<SearchProps, SearchState> {
   constructor(props: SearchProps) {
     super(props);
     this.state = {
-      searchTerm: '',
+      searchTerm: localStorage.getItem('lastSearch') || '',
     };
   }
 
@@ -30,19 +30,18 @@ class Search extends Component<SearchProps, SearchState> {
     const { updateCards, setLoading, setError } = this.props;
     event.preventDefault();
     const { searchTerm } = this.state;
-    setLoading(true);
-    if (searchTerm) {
-      console.log('Поисковый запрос:', searchTerm);
-      try {
-        const endPoint = `?search=${searchTerm}`;
-        const { results }: ApiResponse = await getCharacters(endPoint);
-        updateCards(results);
-        setLoading(false);
-      } catch (error) {
-        console.error('Ошибка при получении данных:', error);
-        setLoading(false);
-        setError(true);
-      }
+    console.log('Поисковый запрос:', searchTerm);
+    const endPoint = searchTerm ? `?search=${searchTerm}` : '?page=1';
+    localStorage.setItem('lastSearch', searchTerm);
+    try {
+      setLoading(true);
+      const { results }: ApiResponse = await getCharacters(endPoint);
+      updateCards(results);
+      setLoading(false);
+    } catch (error) {
+      console.error('Ошибка при получении данных:', error);
+      setLoading(false);
+      setError(true);
     }
   };
 
@@ -56,7 +55,7 @@ class Search extends Component<SearchProps, SearchState> {
           type="text"
           value={searchTerm}
           onChange={this.handleInputChange}
-          placeholder="Введите имя персонажа"
+          placeholder="enter character name"
         />
         <button className="search-btn" type="submit">
           Search

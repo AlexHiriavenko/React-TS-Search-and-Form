@@ -15,7 +15,12 @@ class PlanetList extends Component<PlanetListProps> {
   }
 
   render(): ReactNode {
-    const { name, climate, terrain, population } = this.props.planet;
+    const {
+      name = '',
+      climate = '',
+      terrain = '',
+      population = '',
+    } = this.props.planet || {};
     return (
       <ul>
         <li>Planet name: {name}</li>

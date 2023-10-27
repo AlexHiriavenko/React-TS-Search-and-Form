@@ -27,7 +27,7 @@ class Home extends Component<HomeProps> {
           {cards?.length ? (
             cards.map((card: Character) => <Card key={card.url} card={card} />)
           ) : (
-            <p className="app-loading">Нет подходящих результатов поиска</p>
+            <p className="app-loading">No search results</p>
           )}
         </section>
       </>

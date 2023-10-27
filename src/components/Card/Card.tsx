@@ -39,7 +39,7 @@ class Card extends Component<CardProps, CardState> {
     this.setPlanetInfo(this.props.card.homeworld);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     // При размонтировании компонента отменить все активные запросы
     this.abortController.abort();
   }
