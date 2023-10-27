@@ -16,9 +16,7 @@ class Home extends Component<HomeProps> {
     const { cards, error } = this.props;
     if (error) {
       return (
-        <p className="app-loading" style={{ color: 'orange' }}>
-          Ошибка получения данных, попробуйте перезагрузить страницу
-        </p>
+        <p className="app-loading alert">error data, try to reload page</p>
       );
     }
     return (

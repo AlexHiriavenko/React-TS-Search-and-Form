@@ -20,7 +20,7 @@ interface ApiResponse {
 
 export type { ApiResponse, Character };
 
-const basicURL = 'https://swapi.dev/api/peasdaople/';
+const basicURL = 'https://swapi.dev/api/people/';
 
 async function getCharacters(options?: string): Promise<ApiResponse> {
   try {

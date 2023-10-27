@@ -43,10 +43,11 @@ class App extends Component<{}, AppState> {
 
   generateError = () => {
     try {
-      throw new Error('This is a test error');
+      throw new Error('catch boundary error');
     } catch (error: Error | unknown) {
       if (error instanceof Error) {
         this.setState({ error: true, errorMessage: error.message });
+        console.error(error.message);
       } else {
         this.setState({ error: true });
       }
@@ -69,13 +70,17 @@ class App extends Component<{}, AppState> {
     if (error) {
       return (
         <ErrorBoundary errorMessage={this.state.errorMessage}>
-          <p className="app-loading">error data, try reloading the page</p>
+          <p className="app-loading alert">
+            error data, try reloading the page
+          </p>
         </ErrorBoundary>
       );
     }
     return (
       <ErrorBoundary>
-        <button onClick={this.generateError}>generate Error</button>
+        <button onClick={this.generateError} className="btnError">
+          generate Error
+        </button>
         <Header
           updateCards={this.updateCards}
           setLoading={this.setLoading}

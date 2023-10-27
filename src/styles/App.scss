@@ -29,3 +29,23 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.alert {
+  color: orangered;
+}
+
+.btnError {
+  padding-inline: 8px;
+  width: 80px;
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  z-index: 1;
+  background-color: orangered;
+  color: whitesmoke;
+  font-size: 700;
+  border: none;
+  @media (max-width: 480px) {
+    display: none;
+  }
+}

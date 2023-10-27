@@ -20,14 +20,15 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    console.log('test');
     console.error('Error Boundary:', error, errorInfo);
   }
 
   render(): ReactNode {
     if (this.state.hasError) {
       return (
-        <h1 className="app">
-          Что-то пошло не так. Пожалуйста, перезагрузите страницу.
+        <h1 className="app-loading alert">
+          error data, try reloading the page.
         </h1>
       );
     }
