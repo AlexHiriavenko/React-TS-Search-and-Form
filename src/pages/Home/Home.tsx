@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 import { Character } from '../../actions/getCharacters';
 import Card from '../../components/Card/Card';
 
@@ -7,20 +7,12 @@ interface HomeProps {
   error: boolean;
 }
 
-class Home extends Component<HomeProps> {
-  constructor(props: HomeProps) {
-    super(props);
-  }
-
-  render() {
-    const { cards, error } = this.props;
-    if (error) {
-      return (
+const Home: React.FC<HomeProps> = ({ cards, error }) => {
+  return (
+    <>
+      {error ? (
         <p className="app-loading alert">error data, try to reload page</p>
-      );
-    }
-    return (
-      <>
+      ) : (
         <section className="cards">
           {cards?.length ? (
             cards.map((card: Character) => <Card key={card.url} card={card} />)
@@ -28,9 +20,9 @@ class Home extends Component<HomeProps> {
             <p className="app-loading">No search results</p>
           )}
         </section>
-      </>
-    );
-  }
-}
+      )}
+    </>
+  );
+};
 
 export default Home;

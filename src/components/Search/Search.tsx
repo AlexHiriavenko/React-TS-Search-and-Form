@@ -1,12 +1,8 @@
-import { ChangeEvent, FormEvent, Component } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import getCharacters, {
   ApiResponse,
   Character,
 } from '../../actions/getCharacters';
-
-interface SearchState {
-  searchTerm: string;
-}
 
 interface SearchProps {
   updateCards: (newCards: Character[]) => void;
@@ -14,23 +10,21 @@ interface SearchProps {
   setError: (bool: boolean) => void;
 }
 
-class Search extends Component<SearchProps, SearchState> {
-  constructor(props: SearchProps) {
-    super(props);
-    this.state = {
-      searchTerm: localStorage.getItem('lastSearch') || '',
-    };
-  }
+const Search: React.FC<SearchProps> = ({
+  updateCards,
+  setLoading,
+  setError,
+}) => {
+  const [searchTerm, setSearchTerm] = useState<string>(
+    localStorage.getItem('lastSearch') || ''
+  );
 
-  handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: event.target.value.trim() });
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value.trim());
   };
 
-  handleSearch = async (event: FormEvent) => {
-    const { updateCards, setLoading, setError } = this.props;
+  const handleSearch = async (event: FormEvent) => {
     event.preventDefault();
-    const { searchTerm } = this.state;
-    console.log('Поисковый запрос:', searchTerm);
     const endPoint = searchTerm ? `?search=${searchTerm}` : '?page=1';
     localStorage.setItem('lastSearch', searchTerm);
     try {
@@ -45,24 +39,21 @@ class Search extends Component<SearchProps, SearchState> {
     }
   };
 
-  render() {
-    const { searchTerm } = this.state;
-    return (
-      <form className="search-form" onSubmit={this.handleSearch}>
-        <input
-          id="search"
-          className="search-input"
-          type="text"
-          value={searchTerm}
-          onChange={this.handleInputChange}
-          placeholder="enter character name"
-        />
-        <button className="search-btn" type="submit">
-          Search
-        </button>
-      </form>
-    );
-  }
-}
+  return (
+    <form className="search-form" onSubmit={handleSearch}>
+      <input
+        id="search"
+        className="search-input"
+        type="text"
+        value={searchTerm}
+        onChange={handleInputChange}
+        placeholder="enter character name"
+      />
+      <button className="search-btn" type="submit">
+        Search
+      </button>
+    </form>
+  );
+};
 
 export default Search;
