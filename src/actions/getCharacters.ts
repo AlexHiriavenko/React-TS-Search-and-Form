@@ -22,9 +22,12 @@ export type { ApiResponse, Character };
 
 const basicURL = 'https://swapi.dev/api/people/';
 
-async function getCharacters(options?: string): Promise<ApiResponse> {
+async function getCharacters(
+  pageNumber?: string | number
+): Promise<ApiResponse> {
   try {
-    const response = await fetch(options ? basicURL + options : basicURL, {
+    const endPoint = `${basicURL}?page=${pageNumber}`;
+    const response = await fetch(endPoint, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
