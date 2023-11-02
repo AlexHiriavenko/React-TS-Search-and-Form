@@ -39,7 +39,9 @@ const App: React.FC<AppProps> = () => {
   };
 
   useEffect(() => {
-    const fetchData = async (pageNumber: string | number) => {
+    const fetchData = async (path: string) => {
+      const arr = path.split('/');
+      const pageNumber = arr[arr.length - 1] || 1;
       try {
         const { results, count }: ApiResponse = await getCharacters(pageNumber);
         setCards(results);
@@ -52,8 +54,7 @@ const App: React.FC<AppProps> = () => {
       }
     };
 
-    fetchData(1);
-    console.log(location.pathname);
+    fetchData(location.pathname);
   }, [searchParam, location.pathname]);
 
   if (loading) {
@@ -68,7 +69,6 @@ const App: React.FC<AppProps> = () => {
     );
   }
 
-  console.log(countPages);
   return (
     <ErrorBoundary>
       <button onClick={generateError} className="btnError">
