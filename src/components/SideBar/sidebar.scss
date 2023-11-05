@@ -1,0 +1,10 @@
+.sidebar {
+    box-sizing: border-box;
+    width: 35%;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    height: 598px;
+
+    @media (max-width:796px) {
+        width: 33%;
+    }
+}

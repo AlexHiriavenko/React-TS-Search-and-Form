@@ -1,60 +1,57 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Character } from '../../actions/getCharacters';
-import Card from '../../components/Card/Card';
-import getCharacters from '../../actions/getCharacters';
-import { ApiResponse } from '../../actions/getCharacters';
+import Sidebar from '../../components/SideBar/SideBar';
+import Main from '../../components/Main/Main';
+import PaginationBtns from '../../components/PaginationBtns/PaginationBtns';
+import CharactersList from '../../components/CharactersList/CharactersList';
+import CharacterCard from '../../components/Card/CharacterCard';
 
-interface HomeProps {
+export interface HomeProps {
   cards: Character[];
   error: boolean;
   countPages: number;
+  setError: Dispatch<SetStateAction<boolean>>;
   setCards: Dispatch<SetStateAction<Character[]>>;
-  setLoading: Dispatch<SetStateAction<boolean>>;
+  searchParam: string;
 }
 
-const Home: React.FC<HomeProps> = ({
-  cards,
-  error,
-  countPages,
-  setCards,
-  setLoading,
-}) => {
-  const navigate = useNavigate();
+const Home: React.FC<HomeProps> = (props) => {
+  const { cards, error, searchParam } = props;
 
-  const paginationButtons = Array.from({ length: countPages }, (_, i) => (
-    <button key={i + 1} onClick={() => handlePageClick(i + 1)}>
-      {i + 1}
-    </button>
-  ));
+  const [currentCharacter, setCurrentCharacter] = useState<Character | null>(
+    null
+  );
 
-  async function handlePageClick(pageNumber: number) {
-    navigate(`/page/${pageNumber}`);
-    setLoading(true);
-    const { results }: ApiResponse = await getCharacters(pageNumber);
-    setCards(results);
-    setLoading(false);
+  const [homeLoading, setHomeLoading] = useState(false);
+
+  function resetCurrentCharacter() {
+    setCurrentCharacter(null);
   }
 
   return (
-    <>
-      {error ? (
-        <p className="app-loading alert">error data, try to reload page</p>
-      ) : (
-        <>
-          <section className="cards">
-            {cards?.length ? (
-              cards.map((card: Character) => (
-                <Card key={card.url} card={card} />
-              ))
-            ) : (
-              <p className="app-loading">No search results</p>
-            )}
-          </section>
-          <div>{paginationButtons}</div>
-        </>
+    <div className="wrapper">
+      {homeLoading && <p className="app-loading">Loading...</p>}
+      {!homeLoading && !error && (
+        <div className="home-container">
+          <Sidebar>
+            <CharactersList
+              cards={cards}
+              setCurrentCharacter={setCurrentCharacter}
+            />
+          </Sidebar>
+          <Main>
+            <CharacterCard currentCharacter={currentCharacter} cards={cards} />
+          </Main>
+        </div>
       )}
-    </>
+      <PaginationBtns
+        {...props}
+        homeLoading={homeLoading}
+        setHomeLoading={setHomeLoading}
+        resetCurrentCharacter={resetCurrentCharacter}
+        searchParam={searchParam}
+      />
+    </div>
   );
 };
 

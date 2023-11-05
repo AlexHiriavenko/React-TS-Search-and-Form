@@ -20,18 +20,13 @@ interface ApiResponse {
 
 export type { ApiResponse, Character };
 
-const basicURL = 'https://swapi.dev/api/people/';
-
-async function getCharacters(
-  pageNumber?: string | number
-): Promise<ApiResponse> {
+async function getCharacters(url: string): Promise<ApiResponse> {
+  console.log(url);
   try {
-    const endPoint = `${basicURL}?page=${pageNumber}`;
-    const response = await fetch(endPoint, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Connection: 'keep-alive',
       },
     });
 
@@ -40,6 +35,7 @@ async function getCharacters(
     }
 
     const data: ApiResponse = await response.json();
+    console.log(data);
     return data;
   } catch (error) {
     console.error('Ошибка при получении данных:', error);

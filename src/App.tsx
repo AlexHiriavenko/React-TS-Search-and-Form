@@ -1,106 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import './styles/App.scss';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import Home from './pages/Home/Home';
+import AppRoutes from './components/Routes/Routes';
 import { ApiResponse, Character } from './actions/getCharacters';
 import getCharacters from './actions/getCharacters';
+import Header from './components/Header/Header';
 
 interface AppProps {}
 
 const App: React.FC<AppProps> = () => {
   const location = useLocation();
-  const defaultSearch = '?page=1';
-  const lastSearch = localStorage.getItem('lastSearch');
-  const searchParam = lastSearch ? `?search=${lastSearch}` : defaultSearch;
 
   const [cards, setCards] = useState<Character[]>([]);
   const [countPages, setCountPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
-  );
+  const [searchParam, setSearchParam] = useState('?page=');
 
-  // const updateCards = (newCards: Character[]) => setCards(newCards);
+  const fetchData = async (path: string) => {
+    const basicURL = 'https://swapi.dev/api/people/';
+    const pageNumber = path.split('/').pop() || 1;
+    const endPoint = basicURL + searchParam + pageNumber;
 
-  const generateError = () => {
     try {
-      throw new Error('catch boundary error');
-    } catch (error: Error | unknown) {
-      if (error instanceof Error) {
-        setError(true);
-        setErrorMessage(error.message);
-        console.error(error.message);
-      } else {
-        setError(true);
-      }
+      const { results, count }: ApiResponse = await getCharacters(endPoint);
+      setCards(results);
+      setCountPages(Math.ceil(count / 10));
+      setLoading(false);
+    } catch (error) {
+      console.error('error get data:', error);
+      setLoading(false);
+      setError(true);
     }
   };
 
+  function resetCardsState() {
+    setCards([]);
+  }
+
   useEffect(() => {
-    const fetchData = async (path: string) => {
-      const arr = path.split('/');
-      const pageNumber = arr[arr.length - 1] || 1;
-      try {
-        const { results, count }: ApiResponse = await getCharacters(pageNumber);
-        setCards(results);
-        setCountPages(Math.ceil(count / 10));
-        setLoading(false);
-      } catch (error) {
-        console.error('error get data:', error);
-        setLoading(false);
-        setError(true);
-      }
-    };
-
+    // console.log(location.pathname);
     fetchData(location.pathname);
-  }, [searchParam, location.pathname]);
 
-  if (loading) {
-    return <p className="app-loading">Loading...</p>;
-  }
+    return () => resetCardsState();
+  }, []);
 
-  if (error) {
-    return (
-      <ErrorBoundary errorMessage={errorMessage}>
-        <p className="app-loading alert">error data, try reloading the page</p>
-      </ErrorBoundary>
-    );
-  }
+  console.log(searchParam);
 
   return (
-    <ErrorBoundary>
-      <button onClick={generateError} className="btnError">
-        generate Error
-      </button>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Home
-              cards={cards}
-              error={error}
-              countPages={countPages}
-              setCards={setCards}
-              setLoading={setLoading}
-            />
-          }
-        />
-        <Route
-          path="/page/:pageNumber"
-          element={
-            <Home
-              cards={cards}
-              error={error}
-              countPages={countPages}
-              setCards={setCards}
-              setLoading={setLoading}
-            />
-          }
-        />
-      </Routes>
-    </ErrorBoundary>
+    <>
+      {loading && <p className="app-loading">Loading...</p>}
+      {error && <p className="app-loading alert">Error, try reload page</p>}
+      {!loading && !error && (
+        <ErrorBoundary>
+          <Header
+            setCards={setCards}
+            setLoading={setLoading}
+            setError={setError}
+            setCountPages={setCountPages}
+            resetCardsState={resetCardsState}
+            setSearchParam={setSearchParam}
+          />
+          <AppRoutes
+            cards={cards}
+            error={error}
+            setError={setError}
+            countPages={countPages}
+            setCards={setCards}
+            searchParam={searchParam}
+          />
+        </ErrorBoundary>
+      )}
+    </>
   );
 };
 

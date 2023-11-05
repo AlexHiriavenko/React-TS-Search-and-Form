@@ -1,0 +1,23 @@
+.character-title {
+    color: rgb(17, 203, 85);
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+    font-size: 20px;
+    cursor: pointer;
+    text-align: left;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin-top: 12px;
+    padding-left: 12px;
+
+    @media (max-width: 796px) {
+        font-size: 16px;
+        padding-left: 6px;
+    }
+
+    &:hover {
+        background-color: gainsboro;
+    }
+}
+
+.character-title.active {
+    background-color: gainsboro;
+}
