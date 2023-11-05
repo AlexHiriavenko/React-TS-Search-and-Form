@@ -11,6 +11,7 @@ import getCharacters, {
   Character,
 } from '../../actions/getCharacters';
 import { createSearhParam } from '../../helpers/createSearchParam';
+import ClearBtn from '../ClearBtn/ClearBtn';
 
 interface SearchProps {
   updateCards: (newCards: Character[]) => void;
@@ -31,9 +32,12 @@ const Search: React.FC<SearchProps> = ({
 
   const navigate = useNavigate();
 
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>(
+    localStorage.getItem('lastSearch') || ''
+  );
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    localStorage.setItem('lastSearch', event.target.value.trim());
     setSearchTerm(event.target.value.trim());
   };
 
@@ -65,16 +69,23 @@ const Search: React.FC<SearchProps> = ({
     }
   };
 
+  function clearInput() {
+    setSearchTerm('');
+  }
+
   return (
     <form className="search-form" onSubmit={handleSearch}>
-      <input
-        id="search"
-        className="search-input"
-        type="text"
-        value={searchTerm}
-        onChange={handleInputChange}
-        placeholder="enter character name"
-      />
+      <div style={{ position: 'relative', maxWidth: 'max-content' }}>
+        <input
+          id="search"
+          className="search-input"
+          type="text"
+          value={searchTerm}
+          onChange={handleInputChange}
+          placeholder="enter character name"
+        />
+        <ClearBtn clearInput={clearInput} />
+      </div>
       <button className="search-btn" type="submit">
         Search
       </button>

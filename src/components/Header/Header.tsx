@@ -30,6 +30,7 @@ const Header: React.FC<HeaderProps> = ({
 
       try {
         setLoading(true);
+        localStorage.setItem('lastSearch', '');
         resetCardsState();
         setSearchParam('?page=');
         const { results, count }: ApiResponse = await getCharacters(endPoint);
