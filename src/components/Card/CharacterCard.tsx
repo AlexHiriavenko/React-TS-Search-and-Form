@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ApiResponse, Character } from '../../actions/getCharacters';
+import { Character } from '../../actions/getCharacters';
 import getPlanet, { Planet } from '../../actions/getPlanet';
 import PlanetList from '../PlanetList/PlanetList';
 

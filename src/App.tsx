@@ -40,11 +40,10 @@ const App: React.FC<AppProps> = () => {
   }
 
   useEffect(() => {
-    // console.log(location.pathname);
     fetchData(location.pathname);
 
     return () => resetCardsState();
-  }, []);
+  });
 
   console.log(searchParam);
 

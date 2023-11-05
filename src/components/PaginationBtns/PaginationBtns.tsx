@@ -64,7 +64,7 @@ function PaginationBtns(props: PagBtnsProps) {
   useEffect(() => {
     const pageNumber = location.pathname.split('/').pop() || 1;
     setActiveButton(+pageNumber);
-  });
+  }, [location.pathname]);
 
   return <div className="pag-btns-group">{paginationButtons} </div>;
 }
