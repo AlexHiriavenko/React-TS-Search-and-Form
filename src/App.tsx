@@ -43,7 +43,7 @@ const App: React.FC<AppProps> = () => {
     fetchData(location.pathname);
 
     return () => resetCardsState();
-  });
+  }, []);
 
   console.log(searchParam);
 
