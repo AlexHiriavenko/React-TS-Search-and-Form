@@ -40,7 +40,11 @@ const Home: React.FC<HomeProps> = (props) => {
             />
           </Sidebar>
           <Main>
-            <CharacterCard currentCharacter={currentCharacter} cards={cards} />
+            <CharacterCard
+              currentCharacter={currentCharacter}
+              cards={cards}
+              resetCurrentCharacter={resetCurrentCharacter}
+            />
           </Main>
         </div>
       )}

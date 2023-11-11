@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { Character } from '../../actions/getCharacters';
 import getPlanet, { Planet } from '../../actions/getPlanet';
 import PlanetList from '../PlanetList/PlanetList';
 
 interface CardProps {
   currentCharacter: Character | null;
+  resetCurrentCharacter: () => void;
   cards: Character[];
 }
 
 function CharacterCard(props: CardProps) {
-  const { currentCharacter, cards } = props;
+  const { currentCharacter, cards, resetCurrentCharacter } = props;
 
   const [planet, setPlanet] = useState<Planet>({
     name: '',
@@ -82,6 +83,9 @@ function CharacterCard(props: CardProps) {
           )}
         </li>
       </ul>
+      <button className="btnClose" onClick={() => resetCurrentCharacter()}>
+        X
+      </button>
     </div>
   );
 }
