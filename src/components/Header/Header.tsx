@@ -4,6 +4,7 @@ import Search from '../Search/Search';
 import { ApiResponse } from '../../actions/getCharacters';
 import getCharacters from '../../actions/getCharacters';
 import { context } from '../Context/context';
+import { initialState } from '../Context/InitialState';
 
 const Header = () => {
   const location = useLocation().pathname;
@@ -15,7 +16,7 @@ const Header = () => {
       const endPoint = 'https://swapi.dev/api/people/?page=1';
 
       try {
-        updateState({ loading: true, cards: [], searchParam: '?page=' });
+        updateState(initialState);
         localStorage.setItem('lastSearch', '');
         const { results, count }: ApiResponse = await getCharacters(endPoint);
         updateState({
