@@ -1,8 +1,28 @@
 .clear-btn {
     position: absolute;
     top: 4.4px;
-    right: 64px;
+    right: 12px;
     cursor: pointer;
+
+    @media (max-width: 560px) {
+        right: 6%;
+    }
+
+    @media (max-width: 480px) {
+        right: 20%;
+    }
+
+    @media (max-width: 410px) {
+        right: 18%;
+    }
+
+    @media (max-width: 380px) {
+        right: 16%;
+    }
+
+    @media (max-width: 360px) {
+        right: 10%;
+    }
 
     &:hover {
         color: orangered

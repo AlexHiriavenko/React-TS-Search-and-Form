@@ -1,14 +1,11 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState, useContext } from 'react';
 import { Character } from '../../actions/getCharacters';
 import CharactersList_Item from '../CharactersList_Item/CharactersList_Item';
+import { context } from '../Context/context';
 
-interface CharactersProps {
-  cards: Character[];
-  setCurrentCharacter: Dispatch<SetStateAction<Character | null>>;
-}
-
-function CharactersList({ cards, setCurrentCharacter }: CharactersProps) {
+function CharactersList() {
   const [activeItem, setActiveItem] = useState('');
+  const cards = useContext(context).state.cards;
 
   function createKey(characterUrl: string) {
     characterUrl = characterUrl.slice(0, -1);
@@ -26,7 +23,6 @@ function CharactersList({ cards, setCurrentCharacter }: CharactersProps) {
           key={createKey(card.url)}
           id={createKey(card.url)}
           card={card}
-          setCurrentCharacter={setCurrentCharacter}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
         />

@@ -1,36 +1,15 @@
-import React, {
-  useState,
-  ChangeEvent,
-  FormEvent,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import { useState, useContext, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import getCharacters, {
-  ApiResponse,
-  Character,
-} from '../../actions/getCharacters';
+import getCharacters, { ApiResponse } from '../../actions/getCharacters';
 import { createSearhParam } from '../../helpers/createSearchParam';
 import ClearBtn from '../ClearBtn/ClearBtn';
+import { context } from '../Context/context';
 
-interface SearchProps {
-  updateCards: (newCards: Character[]) => void;
-  setLoading: (bool: boolean) => void;
-  setError: (bool: boolean) => void;
-  setCountPages: Dispatch<SetStateAction<number>>;
-  setSearchParam: Dispatch<SetStateAction<string>>;
-}
-
-const Search: React.FC<SearchProps> = ({
-  updateCards,
-  setLoading,
-  setError,
-  setCountPages,
-  setSearchParam,
-}) => {
-  const basicURL = 'https://swapi.dev/api/people/';
-
+const Search = () => {
   const navigate = useNavigate();
+
+  const { updateState } = useContext(context);
+  const basicURL = 'https://swapi.dev/api/people/';
 
   const [searchTerm, setSearchTerm] = useState<string>(
     localStorage.getItem('lastSearch') || ''
@@ -48,8 +27,8 @@ const Search: React.FC<SearchProps> = ({
       : basicURL + '?page=1';
 
     navigate('./page/1');
+    updateState({ loading: true });
     try {
-      setLoading(true);
       const { results, count, next }: ApiResponse = await getCharacters(
         endPoint
       );
@@ -58,14 +37,15 @@ const Search: React.FC<SearchProps> = ({
         newSearchParam = createSearhParam(basicURL, next);
       }
       console.log(newSearchParam);
-      setSearchParam(newSearchParam || '?page=');
-      updateCards(results);
-      setCountPages(Math.ceil(count / 10));
-      setLoading(false);
+      updateState({ searchParam: newSearchParam || '?page=' });
+      updateState({
+        cards: results,
+        countPages: Math.ceil(count / 10),
+        loading: false,
+      });
     } catch (error) {
-      console.error('Ошибка при получении данных:', error);
-      setLoading(false);
-      setError(true);
+      console.error('Error:', error);
+      updateState({ loading: false, error: true });
     }
   };
 
@@ -75,7 +55,13 @@ const Search: React.FC<SearchProps> = ({
 
   return (
     <form className="search-form" onSubmit={handleSearch}>
-      <div style={{ position: 'relative', maxWidth: 'max-content' }}>
+      <div
+        style={{
+          position: 'relative',
+          width: '320px',
+          minWidth: '220px',
+        }}
+      >
         <input
           id="search"
           className="search-input"

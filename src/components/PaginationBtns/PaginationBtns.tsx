@@ -1,28 +1,26 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import {
+  useState,
+  useEffect,
+  useContext,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import getCharacters, { ApiResponse } from '../../actions/getCharacters';
-import { HomeProps } from '../../pages/Home/Home';
+import { context } from '../Context/context';
 
-interface PagBtnsProps extends HomeProps {
+interface PagBtnsProps {
   homeLoading: boolean;
   setHomeLoading: Dispatch<SetStateAction<boolean>>;
-  resetCurrentCharacter: () => void;
-  searchParam: string;
 }
 
 function PaginationBtns(props: PagBtnsProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { state, updateState } = useContext(context);
+  const { countPages, searchParam } = state;
 
-  const {
-    countPages,
-    homeLoading,
-    setCards,
-    setError,
-    setHomeLoading,
-    resetCurrentCharacter,
-    searchParam,
-  } = props;
+  const { homeLoading, setHomeLoading } = props;
   const [activeButton, setActiveButton] = useState<string | number>(1);
 
   const paginationButtons = Array.from({ length: countPages }, (_, i) => (
@@ -41,22 +39,23 @@ function PaginationBtns(props: PagBtnsProps) {
       const locationNumber = Number(location.pathname.split('/').pop());
       return locationNumber === pageNumber;
     }
+
     if (!isSamePage(pageNumber)) {
       const basicURL = 'https://swapi.dev/api/people/';
       const endPoint = basicURL + searchParam + pageNumber;
       navigate(`/page/${pageNumber}`);
 
       try {
-        resetCurrentCharacter();
+        updateState({ currentCard: null });
         setHomeLoading(true);
         const { results }: ApiResponse = await getCharacters(endPoint);
-        setCards(results);
+        updateState({ cards: results });
         setHomeLoading(false);
-        setActiveButton(pageNumber); // Устанавливаем активную кнопку при клике
+        setActiveButton(pageNumber);
       } catch (error) {
         console.error('error get data:', error);
         setHomeLoading(false);
-        setError(true);
+        updateState({ error: true });
       }
     }
   }

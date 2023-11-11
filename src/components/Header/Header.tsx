@@ -1,46 +1,31 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Search from '../Search/Search';
-import { Character } from '../../actions/getCharacters';
 import { ApiResponse } from '../../actions/getCharacters';
 import getCharacters from '../../actions/getCharacters';
+import { context } from '../Context/context';
 
-interface HeaderProps {
-  setCards: Dispatch<SetStateAction<Character[]>>;
-  setLoading: (bool: boolean) => void;
-  setError: (bool: boolean) => void;
-  setCountPages: Dispatch<SetStateAction<number>>;
-  resetCardsState: () => void;
-  setSearchParam: Dispatch<SetStateAction<string>>;
-}
-
-const Header: React.FC<HeaderProps> = ({
-  setCards,
-  setLoading,
-  setError,
-  setCountPages,
-  resetCardsState,
-  setSearchParam,
-}) => {
+const Header = () => {
   const location = useLocation().pathname;
+
+  const { updateState } = useContext(context);
 
   async function switchHome() {
     if (location !== '/') {
       const endPoint = 'https://swapi.dev/api/people/?page=1';
 
       try {
-        setLoading(true);
+        updateState({ loading: true, cards: [], searchParam: '?page=' });
         localStorage.setItem('lastSearch', '');
-        resetCardsState();
-        setSearchParam('?page=');
         const { results, count }: ApiResponse = await getCharacters(endPoint);
-        setCountPages(Math.ceil(count / 10));
-        setCards(results);
-        setLoading(false);
+        updateState({
+          countPages: Math.ceil(count / 10),
+          cards: results,
+          loading: false,
+        });
       } catch (error) {
         console.error('error get data:', error);
-        setLoading(false);
-        setError(true);
+        updateState({ loading: false, error: true });
       }
     }
   }
@@ -50,13 +35,7 @@ const Header: React.FC<HeaderProps> = ({
       <Link to={'/'} onClick={switchHome}>
         <h1 className="app-title">Star Wars</h1>
       </Link>
-      <Search
-        updateCards={setCards}
-        setLoading={setLoading}
-        setError={setError}
-        setCountPages={setCountPages}
-        setSearchParam={setSearchParam}
-      />
+      <Search />
     </header>
   );
 };
