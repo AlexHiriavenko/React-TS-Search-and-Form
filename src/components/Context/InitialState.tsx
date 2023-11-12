@@ -7,6 +7,7 @@ interface AppState {
   cards: Character[];
   countPages: number;
   searchParam: string;
+  searchTerm: string;
 }
 
 const initialState: AppState = {
@@ -16,6 +17,7 @@ const initialState: AppState = {
   cards: [],
   countPages: 1,
   searchParam: '?page=',
+  searchTerm: localStorage.getItem('lastSearch') || '',
 };
 
 export { initialState };

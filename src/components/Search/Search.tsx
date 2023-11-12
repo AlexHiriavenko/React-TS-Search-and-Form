@@ -1,4 +1,4 @@
-import { useState, useContext, ChangeEvent, FormEvent } from 'react';
+import { useContext, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import getCharacters, { ApiResponse } from '../../actions/getCharacters';
 import { createSearhParam } from '../../helpers/createSearchParam';
@@ -9,15 +9,13 @@ const Search = () => {
   const navigate = useNavigate();
 
   const { updateState } = useContext(context);
-  const basicURL = 'https://swapi.dev/api/people/';
+  const { searchTerm } = useContext(context).state;
 
-  const [searchTerm, setSearchTerm] = useState<string>(
-    localStorage.getItem('lastSearch') || ''
-  );
+  const basicURL = 'https://swapi.dev/api/people/';
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     localStorage.setItem('lastSearch', event.target.value.trim());
-    setSearchTerm(event.target.value.trim());
+    updateState({ searchTerm: event.target.value.trim() });
   };
 
   const handleSearch = async (event: FormEvent) => {
@@ -50,7 +48,7 @@ const Search = () => {
   };
 
   function clearInput() {
-    setSearchTerm('');
+    updateState({ searchTerm: '' });
   }
 
   return (
