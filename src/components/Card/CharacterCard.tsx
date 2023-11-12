@@ -6,6 +6,7 @@ import { context } from '../Context/context';
 function CharacterCard() {
   const { state, updateState } = useContext(context);
   const { currentCard, cards } = state;
+  console.log(currentCard);
 
   const [planet, setPlanet] = useState<Planet>({
     name: '',
@@ -16,7 +17,7 @@ function CharacterCard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const setPlanetInfo = async (url: string) => {
+  const setPlanetInfo = async (url: string): Promise<void> => {
     try {
       setError(false);
       setLoading(true);
@@ -43,7 +44,9 @@ function CharacterCard() {
 
   if (!currentCard) {
     return cards.length ? (
-      <p className="app-loading">Select a Character</p>
+      <p className="app-loading" data-testid="noActiveCardMessage">
+        Select a Character
+      </p>
     ) : null;
   }
 
@@ -56,7 +59,7 @@ function CharacterCard() {
   const characterPhoto = `https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/${characterID}.jpg`;
 
   return (
-    <div className="card">
+    <div className="card" data-testid="character-info">
       <h3 className="card__title">Hero Name: {name}</h3>
       <img src={characterPhoto} alt="character photo" width={180} />
       <ul className="card__list">
@@ -80,6 +83,7 @@ function CharacterCard() {
       </ul>
       <button
         className="btnClose"
+        data-testid="btnClose"
         onClick={() => updateState({ currentCard: null })}
       >
         X

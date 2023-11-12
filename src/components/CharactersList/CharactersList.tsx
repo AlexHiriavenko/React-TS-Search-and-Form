@@ -17,7 +17,7 @@ function CharactersList() {
   }
 
   return (
-    <ul>
+    <ul data-testid="characters-list">
       {cards.map((card: Character) => (
         <CharactersList_Item
           key={createKey(card.url)}

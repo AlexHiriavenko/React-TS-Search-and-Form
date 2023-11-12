@@ -52,7 +52,11 @@ const Search = () => {
   }
 
   return (
-    <form className="search-form" onSubmit={handleSearch}>
+    <form
+      className="search-form"
+      onSubmit={handleSearch}
+      data-testid="search-form"
+    >
       <div
         style={{
           position: 'relative',
