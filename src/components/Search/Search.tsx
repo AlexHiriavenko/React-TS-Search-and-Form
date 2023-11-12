@@ -27,7 +27,7 @@ const Search = () => {
       : basicURL + '?page=1';
 
     navigate('./page/1');
-    updateState({ loading: true });
+    updateState({ loading: true, currentCard: null });
     try {
       const { results, count, next }: ApiResponse = await getCharacters(
         endPoint
