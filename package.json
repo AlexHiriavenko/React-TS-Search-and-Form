@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "format:fix": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
     "test": "jest",
-    "test:coverage": "jest --coverage --collectCoverageFrom=\"./src/**\""
+    "test:coverage": "jest --coverage --collectCoverageFrom=\"./src/**\"",
+    "pre-push": "npm run test"
   },
   "eslintConfig": {
     "extends": [
@@ -57,7 +58,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm test"
+      "pre-push": "npm run test"
     }
   }
 }
