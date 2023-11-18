@@ -1,49 +1,45 @@
 import React, { useEffect, useContext } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import './styles/App.scss';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import AppRoutes from './components/Routes/Routes';
-import { ApiResponse } from './actions/getCharacters';
-import getCharacters from './actions/getCharacters';
 import Header from './components/Header/Header';
 import { context } from './components/Context/context';
+import { useGetCharactersQuery, SearchParams } from './redux/RTK-Query/swapi';
+import { RootState } from './redux/rootStateType';
 
 interface AppProps {}
 
 const App: React.FC<AppProps> = () => {
   const location = useLocation();
-  const { state, updateState } = useContext(context);
-  const { loading, error, searchParam } = state;
+  const { updateState } = useContext(context);
 
-  const fetchData = async (path: string) => {
-    const basicURL = 'https://swapi.dev/api/people/';
-    const pageNumber = path.split('/').pop() || 1;
-    const endPoint = basicURL + searchParam + pageNumber;
+  const searchParam = useSelector(
+    (state: RootState) => state.search.searchParam
+  );
 
-    try {
-      const { results, count }: ApiResponse = await getCharacters(endPoint);
-      updateState({
-        loading: false,
-        cards: results,
-        countPages: Math.ceil(count / 10),
-      });
-    } catch (error) {
-      console.error('error get data:', error);
-      updateState({ loading: false, error: true });
-    }
+  const endPoint: SearchParams = {
+    searchParam: searchParam,
+    pageNumber: Number(location.pathname.split('/').pop()) || 1,
   };
 
-  useEffect(() => {
-    fetchData(location.pathname);
+  const { data, error, isLoading, refetch } = useGetCharactersQuery(endPoint);
 
-    return () => updateState({ cards: [] });
-  }, []);
+  useEffect(() => {
+    refetch();
+    updateState({
+      countPages: Math.ceil((data?.count || 1) / 10),
+    });
+
+    // return () => updateState({ cards: [] });
+  }, [data?.count, searchParam]);
 
   return (
     <>
-      {loading && <p className="app-loading">Loading...</p>}
+      {isLoading && <p className="app-loading">Loading...</p>}
       {error && <p className="app-loading alert">Error, try reload page</p>}
-      {!loading && !error && (
+      {!isLoading && !error && (
         <ErrorBoundary>
           <Header />
           <AppRoutes />

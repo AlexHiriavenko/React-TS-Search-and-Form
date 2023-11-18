@@ -6,7 +6,6 @@ import { context } from '../Context/context';
 function CharacterCard() {
   const { state, updateState } = useContext(context);
   const { currentCard, cards } = state;
-  console.log(currentCard);
 
   const [planet, setPlanet] = useState<Planet>({
     name: '',
