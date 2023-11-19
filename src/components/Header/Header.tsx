@@ -1,33 +1,27 @@
-import { useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setSearchParam, setSearchTerm } from '../../redux/Slices/searh.slice';
 import Search from '../Search/Search';
-import { ApiResponse } from '../../actions/getCharacters';
-import getCharacters from '../../actions/getCharacters';
-import { context } from '../Context/context';
-import { initialState } from '../Context/InitialState';
+import {
+  resetCharacter,
+  setCharacters,
+} from '../../redux/Slices/characters.slice';
+import getCharacters, { ApiResponse } from '../../actions/getCharacters';
 
 const Header = () => {
-  const location = useLocation().pathname;
-
-  const { updateState } = useContext(context);
+  const dispatch = useDispatch();
 
   async function switchHome() {
-    if (location !== '/') {
+    localStorage.setItem('lastSearch', '');
+    dispatch(setSearchTerm(''));
+    dispatch(setSearchParam('/?page='));
+    try {
       const endPoint = 'https://swapi.dev/api/people/?page=1';
-
-      try {
-        updateState(initialState);
-        localStorage.setItem('lastSearch', '');
-        const { results, count }: ApiResponse = await getCharacters(endPoint);
-        updateState({
-          countPages: Math.ceil(count / 10),
-          cards: results,
-          loading: false,
-        });
-      } catch (error) {
-        console.error('error get data:', error);
-        updateState({ loading: false, error: true });
-      }
+      dispatch(resetCharacter());
+      const { results }: ApiResponse = await getCharacters(endPoint);
+      dispatch(setCharacters(results));
+    } catch (error) {
+      console.error('error get data:', error);
     }
   }
 

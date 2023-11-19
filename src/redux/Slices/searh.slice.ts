@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  searchParam: '?page=',
+  searchParam: '/?page=',
   searchTerm: localStorage.getItem('lastSearch') || '',
 };
 

@@ -1,12 +1,12 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
+import getCharacters, { ApiResponse } from '../../actions/getCharacters';
 import { RootState } from '../../redux/rootStateType';
 import {
   resetCharacter,
   setCharacters,
 } from '../../redux/Slices/characters.slice';
-import { useGetCharactersQuery } from '../../redux/RTK-Query/swapi';
 
 interface PagBtnsProps {
   homeLoading: boolean;
@@ -39,24 +39,25 @@ function PaginationBtns(props: PagBtnsProps) {
     </button>
   ));
 
-  function isSamePage(pageNumber: number): boolean {
-    const locationNumber = Number(location.pathname.split('/').pop());
-    return locationNumber === pageNumber;
-  }
-
   async function handlePageClick(pageNumber: number) {
+    function isSamePage(pageNumber: number): boolean {
+      const locationNumber = Number(location.pathname.split('/').pop());
+      return locationNumber === pageNumber;
+    }
+
     if (!isSamePage(pageNumber)) {
+      const basicURL = 'https://swapi.dev/api/people/';
+      console.log(searchParam);
+      const endPoint = !searchParam.includes('search')
+        ? basicURL + searchParam.slice(1) + pageNumber
+        : basicURL + searchParam + `&page=${pageNumber}`;
       navigate(`/page/${pageNumber}`);
 
       try {
         dispatch(resetCharacter());
         setHomeLoading(true);
-        const endPoint = {
-          searchParam: searchParam,
-          pageNumber: pageNumber,
-        };
-        const { data } = useGetCharactersQuery(endPoint);
-        dispatch(setCharacters(data?.results));
+        const { results }: ApiResponse = await getCharacters(endPoint);
+        dispatch(setCharacters(results));
         setHomeLoading(false);
         setActiveButton(pageNumber);
       } catch (error) {
