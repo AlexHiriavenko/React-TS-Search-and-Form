@@ -6,6 +6,14 @@ interface SearchParams {
   pageNumber: number;
 }
 
+interface Planet {
+  name: string;
+  climate: string;
+  terrain: string;
+  population: string;
+  [key: string]: unknown;
+}
+
 export const swapi = createApi({
   reducerPath: 'swapi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://swapi.dev/api/people/' }),
@@ -13,8 +21,11 @@ export const swapi = createApi({
     getCharacters: builder.query<ApiResponse, SearchParams>({
       query: ({ searchParam, pageNumber }) => `${searchParam}${pageNumber}`,
     }),
+    getPlanet: builder.query<Planet, string>({
+      query: (url) => url,
+    }),
   }),
 });
 
-export const { useGetCharactersQuery } = swapi;
+export const { useGetCharactersQuery, useGetPlanetQuery } = swapi;
 export type { SearchParams };

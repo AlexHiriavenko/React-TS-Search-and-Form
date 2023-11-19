@@ -1,13 +1,12 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import getCharacters, { ApiResponse } from '../../actions/getCharacters';
-import { context } from '../Context/context';
+import { RootState } from '../../redux/rootStateType';
+import {
+  resetCharacter,
+  setCharacters,
+} from '../../redux/Slices/characters.slice';
+import { useGetCharactersQuery } from '../../redux/RTK-Query/swapi';
 
 interface PagBtnsProps {
   homeLoading: boolean;
@@ -17,8 +16,14 @@ interface PagBtnsProps {
 function PaginationBtns(props: PagBtnsProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { state, updateState } = useContext(context);
-  const { countPages, searchParam } = state;
+  const dispatch = useDispatch();
+
+  const searchParam = useSelector(
+    (state: RootState) => state.search.searchParam
+  );
+  const countPages = useSelector(
+    (state: RootState) => state.pagination.countPages
+  );
 
   const { homeLoading, setHomeLoading } = props;
   const [activeButton, setActiveButton] = useState<string | number>(1);
@@ -34,28 +39,29 @@ function PaginationBtns(props: PagBtnsProps) {
     </button>
   ));
 
-  async function handlePageClick(pageNumber: number) {
-    function isSamePage(pageNumber: number): boolean {
-      const locationNumber = Number(location.pathname.split('/').pop());
-      return locationNumber === pageNumber;
-    }
+  function isSamePage(pageNumber: number): boolean {
+    const locationNumber = Number(location.pathname.split('/').pop());
+    return locationNumber === pageNumber;
+  }
 
+  async function handlePageClick(pageNumber: number) {
     if (!isSamePage(pageNumber)) {
-      const basicURL = 'https://swapi.dev/api/people/';
-      const endPoint = basicURL + searchParam + pageNumber;
       navigate(`/page/${pageNumber}`);
 
       try {
-        updateState({ currentCard: null });
+        dispatch(resetCharacter());
         setHomeLoading(true);
-        const { results }: ApiResponse = await getCharacters(endPoint);
-        updateState({ cards: results });
+        const endPoint = {
+          searchParam: searchParam,
+          pageNumber: pageNumber,
+        };
+        const { data } = useGetCharactersQuery(endPoint);
+        dispatch(setCharacters(data?.results));
         setHomeLoading(false);
         setActiveButton(pageNumber);
       } catch (error) {
         console.error('error get data:', error);
         setHomeLoading(false);
-        updateState({ error: true });
       }
     }
   }

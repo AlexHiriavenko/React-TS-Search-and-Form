@@ -1,7 +1,6 @@
-import { ApiResponse } from '../actions/getCharacters';
+import { ApiResponse, Character } from '../actions/getCharacters';
 
 interface RootState {
-  // Другие разделы вашего стейта
   swapi: {
     queries: {
       getCharacters: {
@@ -30,6 +29,13 @@ interface RootState {
   search: {
     searchParam: string;
     searchTerm: string;
+  };
+  pagination: {
+    countPages: number;
+  };
+  characters: {
+    characters: Character[];
+    character: Character;
   };
 }
 

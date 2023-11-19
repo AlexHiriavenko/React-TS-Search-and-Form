@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { Character } from '../../actions/getCharacters';
 import { Dispatch, SetStateAction, MouseEvent } from 'react';
-import { context } from '../Context/context';
+import { setCharacter } from '../../redux/Slices/characters.slice';
 
 interface CharacterProps {
   id: string | undefined;
@@ -13,12 +13,12 @@ interface CharacterProps {
 type ItemIvent = MouseEvent<HTMLLIElement, globalThis.MouseEvent>;
 
 function CharactersList_Item(props: CharacterProps) {
+  const dispatch = useDispatch();
   const { id, activeItem, setActiveItem, card } = props;
-  const { updateState } = useContext(context);
 
   function handleClickItem(event: ItemIvent, card: Character | null): void {
     if (card) {
-      updateState({ currentCard: card });
+      dispatch(setCharacter(card));
       const idItem = event.currentTarget.id;
       setActiveItem(idItem);
     }

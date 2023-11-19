@@ -1,30 +1,29 @@
-import React, { ReactNode } from 'react';
+import { useSelector } from 'react-redux';
+import { useGetPlanetQuery } from '../../redux/RTK-Query/swapi';
+import { RootState } from '../../redux/rootStateType';
 
-interface PlanetListProps {
-  planet: {
-    name: string;
-    climate: string;
-    terrain: string;
-    population: string;
-  };
-}
+function PlanetList() {
+  const planetURL = useSelector(
+    (state: RootState) => state.characters.character.homeworld
+  );
 
-const PlanetList: React.FC<PlanetListProps> = ({ planet }): ReactNode => {
-  const {
-    name = '',
-    climate = '',
-    terrain = '',
-    population = '',
-  } = planet || {};
+  const { data, error, isLoading } = useGetPlanetQuery(planetURL);
+  const { name, climate, terrain, population } = data || {};
 
   return (
-    <ul>
-      <li>Planet name: {name}</li>
-      <li>Planet Climate: {climate}</li>
-      <li>Planet terrain: {terrain}</li>
-      <li>Planet population: {population}</li>
-    </ul>
+    <>
+      {error && <span className="alert">error</span>}
+      {isLoading && <span>Loading ...</span>}
+      {!error && !isLoading && (
+        <ul>
+          <li>Planet name: {name}</li>
+          <li>Planet Climate: {climate}</li>
+          <li>Planet terrain: {terrain}</li>
+          <li>Planet population: {population}</li>
+        </ul>
+      )}
+    </>
   );
-};
+}
 
 export default PlanetList;

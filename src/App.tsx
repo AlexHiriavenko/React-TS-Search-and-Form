@@ -1,19 +1,20 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import './styles/App.scss';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import AppRoutes from './components/Routes/Routes';
 import Header from './components/Header/Header';
-import { context } from './components/Context/context';
 import { useGetCharactersQuery, SearchParams } from './redux/RTK-Query/swapi';
 import { RootState } from './redux/rootStateType';
+import { setCountPages } from './redux/Slices/pagination.slice';
+import { setCharacters } from './redux/Slices/characters.slice';
 
 interface AppProps {}
 
 const App: React.FC<AppProps> = () => {
   const location = useLocation();
-  const { updateState } = useContext(context);
+  const dispatch = useDispatch();
 
   const searchParam = useSelector(
     (state: RootState) => state.search.searchParam
@@ -28,10 +29,9 @@ const App: React.FC<AppProps> = () => {
 
   useEffect(() => {
     refetch();
-    updateState({
-      countPages: Math.ceil((data?.count || 1) / 10),
-    });
-
+    const counPages = Math.ceil((data?.count || 1) / 10);
+    dispatch(setCountPages(counPages));
+    dispatch(setCharacters(data?.results || []));
     // return () => updateState({ cards: [] });
   }, [data?.count, searchParam]);
 

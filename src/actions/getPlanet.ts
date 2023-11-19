@@ -9,6 +9,7 @@ interface Planet {
 export type { Planet };
 
 async function getPlanet(url: string): Promise<Planet> {
+  console.log(url);
   const response = await fetch(url, {
     method: 'GET',
     headers: {
